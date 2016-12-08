@@ -53,9 +53,9 @@ describe GamesController do
     end
 
     context "when invalid params are passed" do
-      it "responds with status code 200" do
+      it "responds with status code 422: Unprocessable Entity" do
         post :create, { game: { user_throw: "pineapple" } }
-        expect(response).to have_http_status 200
+        expect(response).to have_http_status 422
       end
 
       it "does not create a new game in the database"
