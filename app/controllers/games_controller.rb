@@ -17,7 +17,7 @@ class GamesController < ApplicationController
     if @game.save
       redirect_to @game, notice: 'Game was successfully created.'
     else
-      render :new
+      render :new, status: 422
     end
   end
 
