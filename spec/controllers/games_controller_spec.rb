@@ -4,11 +4,20 @@ describe GamesController do
   let!(:game) { Game.create!(user_throw: Game::THROWS.sample) }
 
   describe "GET #index" do
-    it "responds with status code 200"
+    it "responds with status code 200" do
+      get :index
+      expect(response).to be_success
+      expect(response).to have_http_status(200)
+    end
 
-    it "assigns the recent games as @games"
-
-    it "renders the :index template"
+    it "assigns the recent games as @games" do
+      get :index
+      expect(assigns(:games)).to eq(Game.recent)
+    end
+    it "renders the :index template" do
+       get :index
+       expect(response).to render_template("index")
+    end
   end
 
   describe "GET #show" do
@@ -16,12 +25,10 @@ describe GamesController do
       get :show, { id: game.id }
       expect(response).to have_http_status 200
     end
-
     it "assigns the correct game as @game" do
       get :show, { id: game.id }
       expect(assigns(:game)).to eq(game)
     end
-
     it "renders the :show template" do
       get :show, { id: game.id }
       expect(response).to render_template(:show)
@@ -29,27 +36,42 @@ describe GamesController do
   end
 
   describe "GET #new" do
-    it "responds with status code 200"
-
+    it "responds with status code 200" do
+      get :new
+      expect(response).to have_http_status 200
+    end
     it "assigns a new game to @game" do
       get :new
       expect(assigns(:game)).to be_a_new Game
     end
-
-    it "renders the :new template"
+    it "renders the :new template" do
+      get :new
+      expect(response).to render_template(:new)
+    end
   end
 
   describe "POST #create" do
     context "when valid params are passed" do
-      it "responds with status code 302"
-
-      it "creates a new game in the database"
-
-      it "assigns the newly created game as @game"
-
-      it "sets a notice that the game was successfully created"
-
-      it "redirects to the created game"
+      it "responds with status code 302" do
+        #game.recent
+        get :create, { game: {user_throw: "rock"} }
+        expect(response).to have_http_status 302
+      end
+      it "creates a new game in the database" do
+        expect(Game.recent.first).to eq(game)
+      end
+      it "assigns the newly created game as @game" do
+        post :create, {game: { user_throw: "rock"}}
+        expect(assigns(:game)).to be_an_instance_of(Game)
+      end
+      it "sets a notice that the game was successfully created" do
+        post :create, {game: { user_throw: "rock"}}
+        expect(flash[:notice]).to match 'Game was successfully created'
+      end
+      it "redirects to the created game" do
+         post :create, {game: { user_throw: "rock"}}
+         expect(response).to redirect_to game_url(assigns(:game))
+      end
     end
 
     context "when invalid params are passed" do
@@ -57,12 +79,19 @@ describe GamesController do
         post :create, { game: { user_throw: "pineapple" } }
         expect(response).to have_http_status 422
       end
-
-      it "does not create a new game in the database"
-
-      it "assigns the unsaved game as @game"
-
-      it "renders the :new template"
+      it "does not create a new game in the database" do
+        before_count = Game.count
+        post :create, { game: { user_throw: "pineapple"} }
+        expect(Game.count).to eq(before_count)
+      end
+      it "assigns the unsaved game as @game" do
+        post :create, { game: { user_throw: "pineapple"}}
+        expect(assigns(:game)).to be_an_instance_of Game
+      end
+      it "renders the :new template" do
+        post :create, { game: { user_throw: "pineapple"} }
+        expect(response).to render_template(:new)
+      end
     end
   end
 
