@@ -4,6 +4,8 @@ describe Game do
   let(:game) { Game.new }
 
   describe ".recent" do
+    #5 times do game.create
+    #expect game.recent
     pending
   end
 
@@ -58,7 +60,26 @@ describe Game do
 
   describe "#user_throw" do
     describe "validations" do
-      pending
+      it "is valid when it's a rock" do
+        game.user_throw = 'rock'
+        game.valid?
+        expect(game.errors[:user_throw]).to be_empty
+      end
+      it "is valid when it's paper" do
+        game.user_throw = 'paper'
+        game.valid?
+        expect(game.errors[:user_throw]).to be_empty
+      end
+       it "is valid when it's scissors" do
+        game.user_throw = 'scissors'
+        game.valid?
+        expect(game.errors[:user_throw]).to be_empty
+      end
+      it "is NOT valid when it's pineapple" do
+        game.user_throw = 'pineapple'
+        game.valid?
+        expect(game.errors[:user_throw]).to_not be_empty
+      end
     end
   end
 
@@ -70,7 +91,12 @@ describe Game do
       expect(game.winner).to eq "computer"
     end
 
-    it "user is the winner when the user throw beats the computer throw"
+    it "user is the winner when the user throw beats the computer throw" do
+      game.computer_throw = "scissors"
+      game.user_throw = "rock"
+
+      expect(game.winner).to eq "user"
+    end
   end
 
   describe "#winner_throw" do
@@ -90,12 +116,27 @@ describe Game do
   end
 
   describe "#loser_throw" do
-    it "returns the user throw when the computer wins"
+    it "returns the user throw when the computer wins" do
+      game.user_throw = "rock"
+      game.computer_throw = "paper"
 
-    it "returns the computer throw when the user wins"
+      expect(game.loser_throw).to eq game.user_throw
+    end
+
+    it "returns the computer throw when the user wins" do
+      game.user_throw = "scissors"
+      game.computer_throw = "paper"
+
+      expect(game.loser_throw).to eq game.computer_throw
+    end
   end
 
   describe "#user_won?" do
-    pending
+    it "returns true when the user wins" do
+    game.user_throw = "paper"
+    game.computer_throw = "rock"
+
+    expect(game.user_won?).to eq true
+    end
   end
 end
