@@ -20,4 +20,6 @@ RSpec.describe "Routing to games", :type => :routing do
   it "routes DELETE /games/1 to games#destroy" do
     expect(:delete => "/games/1").to route_to("games#destroy", :id => "1")
   end
+
+
 end
