@@ -27,24 +27,70 @@ describe GamesHelper do
     end
   end
 
+
   describe "#result_for_user_throw" do
     context "when the user won the game" do
-      it "returns 'covers' when the user threw paper"
-      it "returns 'cut' when the user threw scissors"
-      it "returns 'crushes' when the user threw rock"
+      it "returns 'covers' when the user threw paper" do
+        game = Game.new(user_throw: "paper", computer_throw: "rock")
+
+        expect(helper.result_for_user_throw(game)).to eq "covers"
+      end
+      it "returns 'cut' when the user threw scissors" do
+        game = Game.new(user_throw: "scissors", computer_throw: "paper")
+        expect(helper.result_for_user_throw(game)).to eq "cut"
+      end
+
+      it "returns 'crushes' when the user threw rock" do
+        game = Game.new(user_throw: "rock", computer_throw: "scissors")
+        expect(helper.result_for_user_throw(game)).to eq "crushes"
+      end
     end
 
     context "when the computer won the game" do
-      pending
+      it "returns 'is covered by' when the computer threw paper" do
+        game = Game.new(user_throw: "rock", computer_throw: "paper")
+
+        expect(helper.result_for_user_throw(game)).to eq "is covered by"
+      end
+      it "returns 'is cut by' when the computer threw scissors" do
+        game = Game.new(user_throw: "paper", computer_throw: "scissors")
+        expect(helper.result_for_user_throw(game)).to eq "is cut by"
+      end
+      it "returns 'is crushed by' when the computer threw rock" do
+        game = Game.new(user_throw: "scissors", computer_throw: "rock")
+        expect(helper.result_for_user_throw(game)).to eq "is crushed by"
+      end
     end
   end
 
   describe "#throw_color" do
-    pending
+    context "when a user chooses a throw" do
+      it "adds a name 'danger' to the class" do
+        # game = Game.new(user_throw: "rock")
+        expect(helper.throw_color('rock')).to eq "danger"
+      end
+      it "adds a name 'success' to the class" do
+        expect(helper.throw_color('paper')).to eq "success"
+      end
+      it "adds a name 'info' to the class" do
+        expect(helper.throw_color('scissors')).to eq "info"
+      end
+    end
   end
 
   describe "#throw_fa_icon" do
-    pending
+    context "when a user chooses a throw" do
+      it "adds a name 'fa-hand-rock-o' to the class" do
+        # game = Game.new(user_throw: "rock")
+        expect(helper.throw_fa_icon('rock')).to eq "fa-hand-rock-o"
+      end
+      it "adds a name 'fa-hand-stop-o' to the class" do
+        expect(helper.throw_fa_icon('paper')).to eq "fa-hand-stop-o"
+      end
+      it "adds a name 'fa-hand-scissors-o' to the class" do
+        expect(helper.throw_fa_icon('scissors')).to eq "fa-hand-scissors-o"
+      end
+    end
   end
 
 end
